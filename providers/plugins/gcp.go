@@ -1,6 +1,7 @@
 package plugins
 
 import (
+	"bifrost/bfconsts"
 	"bifrost/providers/types"
 	"bufio"
 	"bytes"
@@ -22,7 +23,7 @@ type GCP struct {
 }
 
 // Setup creates the clients for use to talk to GCP.
-func (gcp GCP) Setup() {
+func (gcp *GCP) Setup() {
 	ctx := context.Background()
 	storagec, err := storage.NewClient(ctx)
 	if err != nil {
@@ -39,7 +40,7 @@ func (gcp GCP) Setup() {
 }
 
 // Encrypt encrypts the data using GCP KMS
-func (gcp GCP) Encrypt(key string, data []byte) ([]byte, error) {
+func (gcp *GCP) Encrypt(key string, data []byte) ([]byte, error) {
 	req := &kmspb.EncryptRequest{
 		Name: key,
 		Plaintext: data,
@@ -53,7 +54,7 @@ func (gcp GCP) Encrypt(key string, data []byte) ([]byte, error) {
 }
 
 // Decrypt decrypts the data using GCP KMS
-func (gcp GCP) Decrypt(key string, data []byte) ([]byte, error) {
+func (gcp *GCP) Decrypt(key string, data []byte) ([]byte, error) {
 	req := &kmspb.DecryptRequest{
 		Name: key,
 		Ciphertext: data,
@@ -62,12 +63,12 @@ func (gcp GCP) Decrypt(key string, data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt data, %v", err)
 	}
-	
+
 	return resp.GetPlaintext(), nil
 }
 
 // Download downloads the data from a GCP Cloud Storage Bucket
-func (gcp GCP) Download(bucket string, path string) ([]byte, error) {
+func (gcp *GCP) Download(bucket string, path string) ([]byte, error) {
 	bkt := gcp.StorageClient.Bucket(bucket)
 	obj := bkt.Object(path)
 
@@ -86,7 +87,7 @@ func (gcp GCP) Download(bucket string, path string) ([]byte, error) {
 }
 
 // Upload uploads the data to a GCP Cloud Storage Bucket
-func (gcp GCP) Upload(bucket string, path string, data []byte) (bool, error) {
+func (gcp *GCP) Upload(bucket string, path string, data []byte) (bool, error) {
 	bkt := gcp.StorageClient.Bucket(bucket)
 	obj := bkt.Object(path)
 	
@@ -98,17 +99,16 @@ func (gcp GCP) Upload(bucket string, path string, data []byte) (bool, error) {
 	if err := w.Close(); err != nil {
 			return false, fmt.Errorf("failed to close writer handle, %v", err)
 	}
-
 	return true, nil
 }
 
 // ProviderID the string id of this provider for lookup.
 func (gcp GCP) ProviderID() string {
-	return "gcp"
+	return string(bfconsts.ProviderGCP)
 }
 
 // Register self-registration with the ProviderRegistry
 func (gcp GCP) Register(registry *map[string]types.Provider) {
 	gcp.Setup()
-	(*registry)[gcp.ProviderID()] = gcp 
+	(*registry)[gcp.ProviderID()] = &gcp
 }
