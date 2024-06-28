@@ -3,7 +3,7 @@ module bifrost
 go 1.12
 
 require (
-	cloud.google.com/go/kms v1.17.1
-	cloud.google.com/go/storage v1.41.0
-	google.golang.org/genproto v0.0.0-20240528184218-531527333157
+	cloud.google.com/go/kms v1.18.1
+	cloud.google.com/go/storage v1.42.0
+	google.golang.org/genproto v0.0.0-20240624140628-dc46fd24d27d
 )
