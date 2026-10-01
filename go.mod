@@ -6,7 +6,7 @@ toolchain go1.27.1
 
 require (
 	cloud.google.com/go/kms v1.35.0
-	cloud.google.com/go/storage v1.68.0
+	cloud.google.com/go/storage v1.69.0
 	google.golang.org/genproto v0.0.0-20260928230214-8a89bd6388cc
 )
 
