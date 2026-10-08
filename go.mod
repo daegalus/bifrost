@@ -2,12 +2,12 @@ module bifrost
 
 go 1.25.8
 
-toolchain go1.27.1
+toolchain go1.27.2
 
 require (
 	cloud.google.com/go/kms v1.35.0
-	cloud.google.com/go/storage v1.68.0
-	google.golang.org/genproto v0.0.0-20260928230214-8a89bd6388cc
+	cloud.google.com/go/storage v1.69.0
+	google.golang.org/genproto v0.0.0-20261005182115-fad411399dd8
 )
 
 require (
